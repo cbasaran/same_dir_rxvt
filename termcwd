@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+
+window_id=$(xdotool getwindowfocus)
+window_pid=$(xprop -id $window_id | sed -n 's/.*_NET_WM_PID.* = //p')
+dir=$(pstree $window_pid -g | \
+	grep -o '[0-9]\+' | uniq | xargs pwdx 2>&1 | \
+	grep -v 'No such' | cut -d: -f2 | tail -1 | \
+	sed -e 's/^  *//' -e 's/  *$//')
+cd "$dir"
+urxvt
